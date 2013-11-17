@@ -20,8 +20,40 @@
     height: 20px;
 }
 
-.history-container .history-content {
+.history-container .upper{
+	height: auto;
+	overflow: hidden;
     color:#000;
+    font-size: 1.1em;
+    
+}
+
+.history-container .left {
+	width: auto;
+	overflow: hidden;
+	float: none;
+}
+
+.history-container .hidden {
+	display: none;
+	visibility: hidden;
+}
+
+.history-container .visible {
+	display:;
+	visibility: visible;
+}
+
+.expand-text {
+	padding-left: 10px;
+	font-size: .8em;
+}
+
+.history-container .lower-item {
+	height: auto;
+	overflow: hidden;
+    color:#000;
+    padding-left:23px;
     font-size: 1.1em;
 }
 

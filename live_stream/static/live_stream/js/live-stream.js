@@ -14,3 +14,11 @@ $(function(){
     $('.history-container').on('click', '.connection', follow);
 
 });
+
+function showHide(HID) {
+	if (document.getElementById(HID).className == 'visible') {
+		document.getElementById(HID).className='hidden';
+	} else {
+		document.getElementById(HID).className='visible';
+	}
+}
