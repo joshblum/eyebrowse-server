@@ -13,6 +13,8 @@ v1_api.register(UserProfileResource())
 v1_api.register(WhiteListItemResource())
 v1_api.register(BlackListItemResource())
 v1_api.register(EyeHistoryResource())
+v1_api.register(EyeHistoryMessageResource())
+v1_api.register(ChatMessageResource())
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -38,7 +40,7 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('eyebrowse.views',
-    url(r'^googlead6c3c617c310b08.html$', 'google_verify'),
+    url(r'^google3a0cf4e7f8daa91b.html$', 'google_verify'),
     url(r'^feedback$', 'feedback'),
     url(r'^downloads$', 'downloads'),
     url(r'^$', 'home'),
