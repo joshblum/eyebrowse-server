@@ -2,6 +2,7 @@ from django.db.models import Q
 from django.db.models import Sum
 
 from api.models import *
+from api.utils import humanize_time
 
 from live_stream.renderers import *
 
@@ -45,8 +46,11 @@ def live_stream_query_manager(get_dict, req_user, return_type="html"):
         following = set(req_user.profile.follows.all())
     else:
         following = set([])
+        
+            
+    history_groups = group_history(history)
 
-    return history_renderer(req_user, history, return_type,  get_dict.get("template"), get_params=search_params, following=following)
+    return history_renderer(req_user, history_groups, return_type,  get_dict.get("template"), get_params=search_params, following=following)
 
 
 
@@ -79,7 +83,7 @@ def history_search(req_user, timestamp=None, query=None, filter="following", typ
         #ping data with latest time and see if time is present
         ## must be last
 
-        print type, timestamp
+        print 'type: %s timestamp: %s' % (type, timestamp)
         if type == "ping" and timestamp:
             later_time = timestamp + timedelta(seconds=4)
             history = history.filter(start_time__gt=timestamp, end_time__lt=later_time)
@@ -94,6 +98,78 @@ def history_search(req_user, timestamp=None, query=None, filter="following", typ
         history = EyeHistory.objects.none()
 
     return history.select_related()
+
+    
+class GroupHistory(object):
+    def __init__(self, history_item):
+        self.id = history_item.id
+        self.domain = history_item.domain
+        self.history_items = [history_item]
+        self.favIconUrl = history_item.favIconUrl
+        self.user = history_item.user
+    
+    def add_item(self, history_item):
+        self.history_items.append(history_item)
+    
+    def get_title(self):
+        if len(self.history_items) == 1:
+            return self.history_items[0].title
+        else:
+            return ''
+        
+    def get_items(self):
+        if len(self.history_items) == 1:
+            return []
+        else:
+            return self.history_items
+    
+    def one_item(self):
+        if len(self.history_items) == 1:
+            return True
+        else:
+            return False
+        
+    def num_items(self):
+        return len(self.history_items)
+    
+    def first_item(self):
+        return self.history_items[0]
+    
+    def get_total_time(self):
+        earliest_time = self.history_items[0].start_time
+        latest_time = self.history_items[0].end_time
+        
+        for item in self.history_items[1:]:
+            if item.start_time < earliest_time:
+                earliest_time = item.start_time
+            if item.end_time > latest_time:
+                latest_time = item.end_time
+                
+        return humanize_time(latest_time - earliest_time)
+
+
+def group_history(history):
+    history = list(history)
+    history_groups = []
+    i = 0
+    while i < len(history) - 1:
+        print 'i %s' % i
+        group = GroupHistory(history[i])
+        j = i + 1
+        while j < len(history):
+            print 'j %s' % j
+            if group.domain == history[j].domain and group.user == history[j].user:
+                group.add_item(history[j])
+                j += 1
+            else:
+                i = j
+                break
+        i = j
+        history_groups.append(group)
+        
+    print history_groups
+    return history_groups
+        
 
 def profile_stat_gen(profile_user, username=None, url=None):
     """

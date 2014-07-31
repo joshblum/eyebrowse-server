@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 from django.utils import timezone
-
 from api.utils import humanize_time
 import datetime
 import urllib

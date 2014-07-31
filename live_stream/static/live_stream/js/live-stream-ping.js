@@ -112,3 +112,11 @@ function liveStreamPing(args, callback){
     this.setup();
     return this
 }
+
+function showHide(HID) {
+	if (document.getElementById(HID).className == 'visible') {
+		document.getElementById(HID).className='hidden';
+	} else {
+		document.getElementById(HID).className='visible';
+	}
+}
