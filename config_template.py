@@ -14,10 +14,10 @@ MYSQL_PROD = {
 }
 
 MYSQL_LOCAL = {
-    'NAME': '',
-    'USER': '',
-    'PASSWORD': '',
-    'HOST': '',
+    'NAME': 'eyebrowse',
+    'USER': 'admin',
+    'PASSWORD': '946364',
+    'HOST': 'localhost',
 }
 
 # ######### EMAIL ###############
@@ -42,7 +42,7 @@ AWS = {
     'AWS_ACCESS_KEY_ID': '',
     'AWS_SECRET_ACCESS_KEY': '',
     'BUCKET': '',
-    'BUCKET_DEV': '',
+    'BUCKET_DEV': 'eyebrowse-prod',
 }
 
 # ########### Twitter ################

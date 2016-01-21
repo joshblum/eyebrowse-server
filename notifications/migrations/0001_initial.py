@@ -11,7 +11,7 @@ class Migration(SchemaMigration):
         # Adding model 'NoticeType'
         db.create_table('notifications_noticetype', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('label', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('label', self.gf('django.db.models.fields.CharField')(unique=True, max_length=40)),
             ('display', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('default', self.gf('django.db.models.fields.IntegerField')()),
@@ -21,9 +21,13 @@ class Migration(SchemaMigration):
         # Adding model 'Notification'
         db.create_table('notifications_notification', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('recipient', self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'notification_recipient', to=orm['auth.User'])),
+            ('sender', self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'notification_sender', to=orm['auth.User'])),
+            ('date_created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2015, 9, 11, 0, 0))),
             ('notice_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['notifications.NoticeType'])),
             ('seen', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('url', self.gf('django.db.models.fields.URLField')(max_length=300, null=True)),
+            ('message', self.gf('django.db.models.fields.CharField')(max_length=2000, null=True)),
         ))
         db.send_create_signal('notifications', ['Notification'])
 
@@ -125,14 +129,18 @@ class Migration(SchemaMigration):
             'description': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'display': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'label': ('django.db.models.fields.CharField', [], {'max_length': '40'})
+            'label': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '40'})
         },
         'notifications.notification': {
             'Meta': {'object_name': 'Notification'},
+            'date_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2015, 9, 11, 0, 0)'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'message': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'null': 'True'}),
             'notice_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['notifications.NoticeType']"}),
+            'recipient': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'notification_recipient'", 'to': "orm['auth.User']"}),
             'seen': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
+            'sender': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'notification_sender'", 'to': "orm['auth.User']"}),
+            'url': ('django.db.models.fields.URLField', [], {'max_length': '300', 'null': 'True'})
         }
     }
 
