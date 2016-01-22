@@ -8,53 +8,55 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'GoogleInfo'
+        db.create_table('accounts_googleinfo', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('access_token', self.gf('django.db.models.fields.CharField')(default='', max_length=140)),
+        ))
+        db.send_create_signal('accounts', ['GoogleInfo'])
 
-        # Changing field 'WhiteListItem.id'
-        db.alter_column('api_whitelistitem', 'id', self.gf('django.db.models.fields.AutoField')(primary_key=True))
-
-        # Changing field 'BlackListItem.id'
-        db.alter_column('api_blacklistitem', 'id', self.gf('django.db.models.fields.AutoField')(primary_key=True))
 
     def backwards(self, orm):
+        # Deleting model 'GoogleInfo'
+        db.delete_table('accounts_googleinfo')
 
-        # Changing field 'WhiteListItem.id'
-        db.alter_column('api_whitelistitem', 'id', self.gf('django.db.models.fields.IntegerField')(primary_key=True))
-
-        # Changing field 'BlackListItem.id'
-        db.alter_column('api_blacklistitem', 'id', self.gf('django.db.models.fields.IntegerField')(primary_key=True))
 
     models = {
-        'api.blacklistitem': {
-            'Meta': {'object_name': 'BlackListItem'},
-            'date_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 12, 8, 0, 0)'}),
+        'accounts.deliciousinfo': {
+            'Meta': {'object_name': 'DeliciousInfo'},
+            'access_token': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '140'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'type': ('django.db.models.fields.CharField', [], {'default': "'blacklist'", 'max_length': '40'}),
-            'url': ('django.db.models.fields.URLField', [], {'default': "''", 'max_length': '2000'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         },
-        'api.eyehistory': {
-            'Meta': {'object_name': 'EyeHistory'},
-            'domain': ('django.db.models.fields.URLField', [], {'default': "''", 'max_length': '2000'}),
-            'end_event': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '40'}),
-            'end_time': ('django.db.models.fields.DateTimeField', [], {}),
-            'favIconUrl': ('django.db.models.fields.URLField', [], {'default': "''", 'max_length': '2000'}),
-            'humanize_time': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '200'}),
+        'accounts.googleinfo': {
+            'Meta': {'object_name': 'GoogleInfo'},
+            'access_token': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '140'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'src': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '40'}),
-            'start_event': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '40'}),
-            'start_time': ('django.db.models.fields.DateTimeField', [], {}),
-            'title': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '2000'}),
-            'total_time': ('django.db.models.fields.IntegerField', [], {}),
-            'url': ('django.db.models.fields.URLField', [], {'default': "''", 'max_length': '2000'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         },
-        'api.whitelistitem': {
-            'Meta': {'object_name': 'WhiteListItem'},
-            'date_created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 12, 8, 0, 0)'}),
+        'accounts.twitterinfo': {
+            'Meta': {'object_name': 'TwitterInfo'},
+            'access_token': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '140'}),
+            'access_token_secret': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '140'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'type': ('django.db.models.fields.CharField', [], {'default': "'whitelist'", 'max_length': '40'}),
-            'url': ('django.db.models.fields.URLField', [], {'default': "''", 'max_length': '2000'}),
+            'twitter_id': ('django.db.models.fields.IntegerField', [], {}),
+            'twitter_username': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '40'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
+        },
+        'accounts.userprofile': {
+            'Meta': {'object_name': 'UserProfile'},
+            'activation_key': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '40'}),
+            'anon_email': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'bio': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '1000'}),
+            'confirmed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'follows': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'followed_by'", 'symmetrical': 'False', 'to': "orm['accounts.UserProfile']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'location': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '1000'}),
+            'pic_url': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '1000'}),
+            'use_tour': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True'}),
+            'website': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '1000'})
         },
         'auth.group': {
             'Meta': {'object_name': 'Group'},
@@ -94,4 +96,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['api']
+    complete_apps = ['accounts']

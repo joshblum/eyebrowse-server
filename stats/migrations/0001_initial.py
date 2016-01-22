@@ -8,11 +8,23 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'ClickItem'
+        db.create_table('stats_clickitem', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('ip_address', self.gf('django.db.models.fields.CharField')(max_length=39)),
+            ('url_referrer', self.gf('django.db.models.fields.URLField')(default='', max_length=1000)),
+            ('url_clicked', self.gf('django.db.models.fields.URLField')(default='', max_length=1000)),
+            ('time', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+        ))
+        db.send_create_signal('stats', ['ClickItem'])
+
         # Adding model 'FavData'
         db.create_table('stats_favdata', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('domain', self.gf('django.db.models.fields.URLField')(default='', max_length=2000)),
+            ('favicon_url', self.gf('django.db.models.fields.TextField')(default='')),
             ('favIconUrl', self.gf('django.db.models.fields.URLField')(default='', max_length=2000)),
             ('visit_count', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('total_time', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
@@ -21,6 +33,9 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
+        # Deleting model 'ClickItem'
+        db.delete_table('stats_clickitem')
+
         # Deleting model 'FavData'
         db.delete_table('stats_favdata')
 
@@ -62,10 +77,20 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
+        'stats.clickitem': {
+            'Meta': {'object_name': 'ClickItem'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'ip_address': ('django.db.models.fields.CharField', [], {'max_length': '39'}),
+            'time': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'url_clicked': ('django.db.models.fields.URLField', [], {'default': "''", 'max_length': '1000'}),
+            'url_referrer': ('django.db.models.fields.URLField', [], {'default': "''", 'max_length': '1000'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
+        },
         'stats.favdata': {
             'Meta': {'object_name': 'FavData'},
             'domain': ('django.db.models.fields.URLField', [], {'default': "''", 'max_length': '2000'}),
             'favIconUrl': ('django.db.models.fields.URLField', [], {'default': "''", 'max_length': '2000'}),
+            'favicon_url': ('django.db.models.fields.TextField', [], {'default': "''"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'total_time': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
