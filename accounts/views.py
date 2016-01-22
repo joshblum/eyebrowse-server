@@ -1,6 +1,7 @@
 import json
 import tweepy
-import gdata
+import gdata.gauth
+import gdata.contacts
 import urllib
 import urllib2
 import httplib2
@@ -373,7 +374,7 @@ def sync_google(request):
                  
             google_obj = GoogleInfo.objects.create(
                     user=user, access_token=auth_token)
-            template_dict["synced"] = "Your Google account is already connected to Eyebrowse."
+            template_dict["synced"] = "Your Google account is now connected to Eyebrowse."
                  
             get_google_info(request, gdclient, google_obj, template_dict)
              
@@ -381,20 +382,7 @@ def sync_google(request):
             APPLICATION_REDIRECT_URI = 'http://eyebrowse.csail.mit.edu/accounts/profile/sync_google'
             authorize_url = auth_token.generate_authorize_url(
                 redirect_uri=APPLICATION_REDIRECT_URI)
-            url = atom.http_core.ParseUri(authorize_url)
-            if 'error' in url.query:
-                pass
-            else:
-                auth_token.get_access_token(url.query)
-                gd_client = gdata.contacts.service.ContactsService()
-                access_token.authorize(gd_client)
-                request.session["request_token"] = access_token
-            
-                template_dict["synced"] = "Your Google account is already connected to Eyebrowse."
-            
-                get_google_info(request, gdclient, google_obj, template_dict)
-                
-                return redirect_to(request, APPLICATION_REDIRECT_URI)
+            return redirect_to(request, authorize_url)
                 
     return _template_values(request,
                             page_title="Connect Google",
