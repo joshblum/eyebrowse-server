@@ -48,6 +48,11 @@ class Vote(models.Model):
     voter = models.ForeignKey(User, null=False, blank=False) 
 
 
+class UserTagInfo(models.Model):
+    user = models.ForeignKey(User, null=False, blank=False)
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, null=False)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, null=False)
+
 class ChatMessage(models.Model):
     author = models.ForeignKey(
         User, related_name='author', null=False, blank=False)

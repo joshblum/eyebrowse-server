@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Domain and page objects
 class Domain(models.Model):
-    name = models.CharField(max_length=100, default='', unique=True)
+    name = models.CharField(max_length=100, default='', unique=False)
     url = models.URLField(max_length=300, blank=False, null=False)
 
 class Page(models.Model):
