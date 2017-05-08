@@ -209,7 +209,7 @@ def profilepic(request):
 @ajax_request
 def get_friends(request):
     
-    query = request.GET.get('query', None).lower()
+    query = request.GET.get('query', '').lower()
     
     user_prof = UserProfile.objects.get(user=request.user)
     friends = user_prof.follows.all()
