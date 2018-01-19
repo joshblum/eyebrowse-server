@@ -215,9 +215,11 @@ def get_friends(request):
     friends = user_prof.follows.all()
     
     data = []
+    id_list = []
     
     for friend in friends:
         if not query or query in friend.user.username.lower():
+            id_list.append(friend.id)
             data.append({'id': friend.id,
                          'name': '@%s' % (friend.user.username),
                          'avatar': gravatar_for_user(friend.user),
@@ -229,7 +231,6 @@ def get_friends(request):
     
     messages = ChatMessage.objects.filter(url=url).order_by('-date').select_related()
     
-    id_list = []
     for suggested_user in data:
         id_list.append(suggested_user['id'])
         
@@ -242,7 +243,7 @@ def get_friends(request):
                              'name': '@%s' % (commenter.username),
                              'avatar': gravatar_for_user(commenter),
                              'type': 'contact'})
-        if len(data) > 10:
+        if len(data) >= 10:
             break
     
     return {'res': data}
