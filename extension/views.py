@@ -219,7 +219,7 @@ def get_friends(request):
     
     for friend in friends:
         if not query or query in friend.user.username.lower():
-            
+            id_list.append(friend.id)
             data.append({'id': friend.id,
                          'name': '@%s' % (friend.user.username),
                          'avatar': gravatar_for_user(friend.user),
