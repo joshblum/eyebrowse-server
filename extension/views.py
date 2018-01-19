@@ -224,6 +224,26 @@ def get_friends(request):
                          'type': 'contact'})
             if len(data) > 5:
                 break
+            
+    url = request.GET.get('url', '')
+    
+    messages = ChatMessage.objects.filter(url=url).order_by('-date').select_related()
+    
+    id_list = []
+    for suggested_user in data:
+        id_list.append(suggested_user['id'])
+        
+    for message in messages:
+        commenter = message.author
+        if not query or query in commenter.username.lower():
+            if commenter.userprofile.id not in id_list:
+                id_list.append(commenter.userprofile.id)
+                data.append({'id': commenter.userprofile.id,
+                             'name': '@%s' % (commenter.username),
+                             'avatar': gravatar_for_user(commenter),
+                             'type': 'contact'})
+        if len(data) > 10:
+            break
     
     return {'res': data}
 
