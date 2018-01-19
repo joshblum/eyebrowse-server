@@ -219,7 +219,7 @@ def get_friends(request):
     
     for friend in friends:
         if not query or query in friend.user.username.lower():
-            id_list.append(friend.id)
+            
             data.append({'id': friend.id,
                          'name': '@%s' % (friend.user.username),
                          'avatar': gravatar_for_user(friend.user),
@@ -231,9 +231,6 @@ def get_friends(request):
     
     messages = ChatMessage.objects.filter(url=url).order_by('-date').select_related()
     
-    for suggested_user in data:
-        id_list.append(suggested_user['id'])
-        
     for message in messages:
         commenter = message.author
         if not query or query in commenter.username.lower():
