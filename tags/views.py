@@ -875,7 +875,7 @@ def user_value_tags(request):
     'data': data,
   }
 
-@login_required
+#@login_required, commented out to avoid logout bug 
 @ajax_request
 def common_tags(request):
   success = False
